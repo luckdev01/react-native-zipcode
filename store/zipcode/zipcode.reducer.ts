@@ -3,12 +3,9 @@ import {
   createSlice,
   PayloadAction,
 } from '@reduxjs/toolkit';
-import { ZipcodeInfo } from '../../models/zipcode';
+import { ZipcodeEntity } from '../../models/zipcode';
 
-export const zipcodeAdapter = createEntityAdapter<{
-  code: string;
-  info: ZipcodeInfo;
-}>({
+export const zipcodeAdapter = createEntityAdapter<ZipcodeEntity>({
   selectId: zipcode => zipcode.code,
   sortComparer: (a, b) => a.code.localeCompare(b.code),
 });
@@ -24,10 +21,7 @@ export const zipcodeSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getZipcodeInfoSuccess: (
-      state,
-      action: PayloadAction<{ code: string; info: ZipcodeInfo }>,
-    ) => {
+    getZipcodeInfoSuccess: (state, action: PayloadAction<ZipcodeEntity>) => {
       zipcodeAdapter.upsertOne(state, action.payload);
       state.loading = false;
     },
