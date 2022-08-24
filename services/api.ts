@@ -1,9 +1,9 @@
-import {ZipcodeInfo} from '../models/zipcode';
-import {axg} from './axios';
+import { ZipcodeInfo } from '../models/zipcode';
+import { axg } from './axios';
 
 const baseUrl = 'https://api.zippopotam.us';
 
-export async function getZipcodeInfo(
+export async function fetchZipcodeInfo(
   zipcode: string,
   country: string = 'us',
 ): Promise<ZipcodeInfo> {
