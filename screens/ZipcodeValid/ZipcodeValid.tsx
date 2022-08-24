@@ -1,23 +1,26 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { StyleSheet, useColorScheme, View, ScrollView } from 'react-native';
-import { SearchBar, Button, Text } from 'react-native-elements';
+import { SearchBar, Button, useTheme } from 'react-native-elements';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Container from '../components/Container';
-import { getZipcodeInfo as getZipcodeInfoAction } from '../store/zipcode/zipcode.action';
+import { getZipcodeInfo as getZipcodeInfoAction } from '../../store/zipcode/zipcode.action';
 import {
   selectZipcodeInfoByCode,
   selectZipcodeInfoLoading,
   selectZipcodeInfoError,
-} from '../store/zipcode/zipcode.selector';
-import { State } from '../models/state';
-import ErrorMessage from '../components/ErrorMessage';
+} from '../../store/zipcode/zipcode.selector';
+import { State } from '../../models/state';
+import Container from '../../components/Container';
+import ErrorMessage from '../../components/ErrorMessage';
+import ZipcodeInfoTable from './ZipcodeInfoTable';
 
 const ZipcodeValid: FC = () => {
   const [currentCode, setCurrentCode] = useState('');
   const colorScheme = useColorScheme();
+  const { theme } = useTheme();
   const dispatch = useDispatch();
+
   const zipCodeInfo = useSelector((state: State) =>
     selectZipcodeInfoByCode(state, currentCode),
   );
@@ -35,8 +38,6 @@ const ZipcodeValid: FC = () => {
     },
     [dispatch],
   );
-
-  useEffect(() => {}, []);
 
   const handleGetZipcodeInfo = useCallback(
     (keyword: string) => {
@@ -57,7 +58,10 @@ const ZipcodeValid: FC = () => {
           <View style={styles.searchContainer}>
             <SearchBar
               lightTheme={colorScheme === 'light'}
-              containerStyle={styles.searchBar}
+              containerStyle={[
+                styles.searchBar,
+                { backgroundColor: theme.colors?.white },
+              ]}
               placeholder="Type Here..."
               onChangeText={value => setFieldValue('keyword', value)}
               name="keyword"
@@ -67,11 +71,11 @@ const ZipcodeValid: FC = () => {
             />
             <Button title="Search" onPress={handleSubmit} />
           </View>
-          <ScrollView>
+          <ScrollView style={styles.infoContainer}>
             {error ? (
               <ErrorMessage message={error} />
             ) : (
-              <Text>{JSON.stringify(zipCodeInfo)}</Text>
+              <ZipcodeInfoTable data={zipCodeInfo} />
             )}
           </ScrollView>
         </Container>
@@ -85,9 +89,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingRight: 8,
   },
   searchBar: {
     flexGrow: 1,
+  },
+  infoContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 10,
+    width: '100%',
   },
 });
 
