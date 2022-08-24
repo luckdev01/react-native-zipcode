@@ -9,10 +9,7 @@ export type ZipcodeEntity = {
   info: ZipcodeInfo;
 };
 
-export type ZipcodeState = EntityState<{
-  code: string;
-  info: ZipcodeInfo;
-}> & {
+export type ZipcodeState = EntityState<ZipcodeEntity> & {
   loading: boolean;
   error: null;
 };
