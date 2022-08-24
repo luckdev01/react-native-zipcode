@@ -12,7 +12,7 @@ const middlewares = [sagaMiddleware];
 const store = configureStore({
   reducer: rootReducer,
   middleware: getDefaultMiddleware => [
-    ...getDefaultMiddleware({ thunk: false }),
+    ...getDefaultMiddleware({ thunk: false, serializableCheck: false }),
     ...middlewares,
     logger,
   ],

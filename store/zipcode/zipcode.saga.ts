@@ -15,7 +15,9 @@ export function* getZipcodeInfoSaga(
       }),
     );
   } catch (error) {
-    yield put(zipcodeSlice.actions.getZipcodeInfoFailure({ error }));
+    yield put(
+      zipcodeSlice.actions.getZipcodeInfoFailure({ error: error.message }),
+    );
   }
 }
 
