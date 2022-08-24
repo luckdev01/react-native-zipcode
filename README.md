@@ -6,7 +6,7 @@ A small and simple zipcode validation!
 
 ## Install and run on ios
 ```
-npm install -g react-native-cli
+yarn global add @react-native-community/cli
 cd react-native-zipcode
 yarn
 yarn ios
@@ -14,7 +14,7 @@ yarn ios
 
 ## Install and run on android
 ```
-npm install -g react-native-cli
+yarn global add @react-native-community/cli
 cd react-native-zipcode
 yarn
 yarn android
