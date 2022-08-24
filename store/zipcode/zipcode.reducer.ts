@@ -32,8 +32,9 @@ export const zipcodeSlice = createSlice({
       state.loading = false;
     },
     getZipcodeInfoFailure: (state, action: PayloadAction<{ error: any }>) => {
+      console.log(action.payload.error);
       state.loading = false;
-      state.error = action.payload.error;
+      state.error = 'Zip code invalid or not found';
     },
   },
 });

@@ -1,8 +1,9 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useRef, useState } from 'react';
 import { StyleSheet, useColorScheme, View, ScrollView } from 'react-native';
 import { SearchBar, Button, useTheme } from 'react-native-elements';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 
 import { getZipcodeInfo as getZipcodeInfoAction } from '../../store/zipcode/zipcode.action';
 import {
@@ -15,10 +16,19 @@ import Container from '../../components/Container';
 import ErrorMessage from '../../components/ErrorMessage';
 import ZipcodeInfoTable from './ZipcodeInfoTable';
 
+const VaildSchema = Yup.object().shape({
+  keyword: Yup.string()
+    .matches(/^[0-9]+$/, 'Must be only digits')
+    .required('Required')
+    .min(5, 'Must be exactly 5 digits')
+    .max(5, 'Must be exactly 5 digits'),
+});
+
 const ZipcodeValid: FC = () => {
   const [currentCode, setCurrentCode] = useState('');
   const colorScheme = useColorScheme();
   const { theme } = useTheme();
+  const formRef = useRef<FormikProps<{ keyword: string }> | null>(null);
   const dispatch = useDispatch();
 
   const zipCodeInfo = useSelector((state: State) =>
@@ -30,8 +40,9 @@ const ZipcodeValid: FC = () => {
   const error = useSelector((state: State) => selectZipcodeInfoError(state));
 
   const getZipcodeInfo = useCallback(
-    (keyword: string) => {
-      if (!keyword) {
+    async (keyword: string) => {
+      const err = await formRef.current?.validateForm();
+      if (err && Object.keys(err).length) {
         return;
       }
       dispatch(getZipcodeInfoAction(keyword));
@@ -52,8 +63,10 @@ const ZipcodeValid: FC = () => {
       initialValues={{ keyword: '' }}
       onSubmit={values => {
         handleGetZipcodeInfo(values.keyword);
-      }}>
-      {({ handleSubmit, setFieldValue, values }) => (
+      }}
+      validationSchema={VaildSchema}
+      innerRef={formRef}>
+      {({ handleSubmit, setFieldValue, values, errors, touched }) => (
         <Container>
           <View style={styles.searchContainer}>
             <SearchBar
@@ -72,6 +85,9 @@ const ZipcodeValid: FC = () => {
             <Button title="Search" onPress={handleSubmit} />
           </View>
           <ScrollView style={styles.infoContainer}>
+            {errors.keyword && touched.keyword && (
+              <ErrorMessage message={errors.keyword} />
+            )}
             {error ? (
               <ErrorMessage message={error} />
             ) : (
