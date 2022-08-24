@@ -22,7 +22,7 @@ export function* getZipcodeInfoSaga(
 }
 
 // Watchers
-function* watchFollowingDids() {
+function* watchZipcodeInfo() {
   yield takeLatest(
     zipcodeSlice.actions.getZipcodeInfo.type,
     getZipcodeInfoSaga,
@@ -33,7 +33,7 @@ function* watchFollowingDids() {
  * Zipcode Sagas
  */
 function* zipcodeSaga() {
-  yield all([watchFollowingDids()]);
+  yield all([watchZipcodeInfo()]);
 }
 
 export default zipcodeSaga;

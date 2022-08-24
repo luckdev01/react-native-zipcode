@@ -9,7 +9,7 @@ export function ZipcodeStack() {
   return (
     <Stack.Navigator initialRouteName="Zipcode">
       <Stack.Screen
-        name="MoviesList"
+        name="Zipcode"
         component={ZipcodeValid}
         options={{
           headerTitle: 'Zipcode Validation',
